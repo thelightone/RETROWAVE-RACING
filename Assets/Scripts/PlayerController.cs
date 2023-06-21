@@ -1,15 +1,19 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]
 public class PlayerController : MonoBehaviour
 {
+    [SerializeField]
+    private GameObject _eff1;
+    [SerializeField]
+    private GameObject _eff2;
+
     private float _speed = 10f;
-    private float _TurnSpeed = 40f;
     private float _TurnInput;
     private float _ForwardInput;
-    protected Rigidbody _r;
     private Vector3 _CoM;
-    private bool _Awake;
+
+    protected Rigidbody _r;
 
     void Start()
     {
@@ -18,21 +22,43 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        _TurnInput = Input.GetAxis("Horizontal");
-        _ForwardInput = 1 + Input.GetAxis("Vertical");
+        // настройка центра тяжести для реалистичного поведения при поворотах
         _CoM.z = _TurnInput / 3;
         _CoM.y = 0;
         _CoM.x = 0;
         _r.centerOfMass = _CoM;
         _r.WakeUp();
-        _Awake = !_r.IsSleeping();
 
-        if (transform.position.y > 5)
+        if (transform.position.y > 10)
             return;
-        transform.Translate(Vector3.right * Time.deltaTime * _speed * _ForwardInput);
 
-        Vector3 rotate = transform.eulerAngles;
-        rotate.y = -90 + _TurnInput * _TurnSpeed;
-        transform.rotation = Quaternion.Euler(rotate);
+        transform.Translate(Vector3.right * Time.deltaTime * _speed * _ForwardInput);
+        transform.Rotate(transform.eulerAngles * _TurnInput * Time.deltaTime / 5);
+
+        Effects();
+    }
+    public void GasMobile(float gas)
+    {
+        _ForwardInput = gas;
+    }
+
+    public void TurnMobile(float turn)
+    {
+        if (_ForwardInput != 0)
+            _TurnInput = turn;
+    }
+
+    private void Effects()
+    {
+        if (_ForwardInput > 0)
+        {
+            _eff1.SetActive(true);
+            _eff2.SetActive(true);
+        }
+        else
+        {
+            _eff1.SetActive(false);
+            _eff2.SetActive(false);
+        }
     }
 }

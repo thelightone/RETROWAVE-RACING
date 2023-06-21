@@ -2,16 +2,17 @@ using UnityEngine;
 
 public class Wheel : MonoBehaviour
 {
-    private float TurnSpeed = 60f;
-    private float TurnInput;
-
+    private float x;
     void Update()
     {
-        TurnInput = Input.GetAxis("Horizontal");
-        Vector3 rotate = transform.eulerAngles;
-        rotate.z = -TurnInput * TurnSpeed;
-        rotate.x = 90;
-        rotate.y = 90;
-        transform.rotation = Quaternion.Euler(rotate);
+        if (x != 0)
+            transform.Rotate(x, 0, 0);
+        else
+            transform.rotation = Quaternion.Euler(0, 0, 90);
+    }
+
+    public void WheelTurn(float gradus)
+    {
+        x = gradus;
     }
 }

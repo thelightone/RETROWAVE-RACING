@@ -3,7 +3,7 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody))]
 public class EnemyController : MonoBehaviour
 {
-    private float _speed2 = 5.0f;
+    private float _speed2 = 20.0f;
 
     void Update()
     {
